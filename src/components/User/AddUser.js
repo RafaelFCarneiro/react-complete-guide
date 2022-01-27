@@ -1,22 +1,21 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import Button from '../UI/Button';
 import Card from '../UI/Card';
 import ErrorModal from '../UI/ErrorModal';
 import classes from './AddUser.module.css';
+import Wrapper from '../Helpers/Wrapper';
 
 const AddUser = (props) => {
-  const [name, setName] = useState('');
-  const userChangeHandler = (event) => setName(event.target.value);
-
-  const [age, setAge] = useState('');
-  const ageChangeHandler = (event) => setAge(event.target.value);
-
+  const nameInputRef = useRef();
+  const ageInputRef = useRef();
+  
   const [error, setError] = useState();
   const errorHandler = () => setError(null);
 
   const addUserHandler = (event) => {
     event.preventDefault();
 
+    const name = nameInputRef.current.value;
     if (isNotValidName(name)) {
       setError({
         title: 'Invalid input',
@@ -24,6 +23,8 @@ const AddUser = (props) => {
       });
       return;
     }
+    
+    const age = ageInputRef.current.value;
     if (isNotValidAge(age)) {
       setError({
         title: 'Invalid input',
@@ -33,12 +34,12 @@ const AddUser = (props) => {
     }
 
     props.onAddUser({ id: Math.random().toString(), name, age });
-    setAge('');
-    setName('');
+    nameInputRef.current.value = '';
+    ageInputRef.current.value = ''
   };
 
   return (
-    <div>
+    <Wrapper>
       {error && (
         <ErrorModal
           title={error.title}
@@ -52,20 +53,18 @@ const AddUser = (props) => {
           <input
             id="name"
             type="text"
-            value={name}
-            onChange={userChangeHandler}
+            ref={nameInputRef}
           ></input>
           <label htmlFor="age">Age (Years)</label>
           <input
             id="age"
             type="number"
-            value={age}
-            onChange={ageChangeHandler}
+            ref={ageInputRef}
           ></input>
           <Button type="submit">Add User</Button>
         </form>
       </Card>
-    </div>
+    </Wrapper>
   );
 };
 
