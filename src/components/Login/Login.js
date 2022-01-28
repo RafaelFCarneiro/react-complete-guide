@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
@@ -12,28 +12,50 @@ const Login = (props) => {
   const [formIsValid, setFormIsValid] = useState(false);
 
   useEffect(() => {
-    const identifier = setTimeout(() => {
-      setFormIsValid(
-        enteredEmail.includes('@') && enteredPassword.trim().length > 6
-      );
-    }, 500);
-    return () => clearTimeout(identifier);
-  }, [enteredEmail, enteredPassword]);
+    console.log('EFFECT RUNNING');
 
-  const emailChangeHandler = (event) => setEnteredEmail(event.target.value);
-  
-  const passwordChangeHandler = (event) => {
-    setEnteredPassword(event.target.value);
+    return () => {
+      console.log('EFFECT CLEANUP');
+    };
+  }, []);
+
+  // useEffect(() => {
+  //   const identifier = setTimeout(() => {
+  //     console.log('Checking form validity!');
+  //     setFormIsValid(
+  //       enteredEmail.includes('@') && enteredPassword.trim().length > 6
+  //     );
+  //   }, 500);
+
+  //   return () => {
+  //     console.log('CLEANUP');
+  //     clearTimeout(identifier);
+  //   };
+  // }, [enteredEmail, enteredPassword]);
+
+  const emailChangeHandler = (event) => {
+    setEnteredEmail(event.target.value);
+
     setFormIsValid(
-      event.target.value.trim().length > 6 && enteredEmail.includes('@')
+      event.target.value.includes('@') && enteredPassword.trim().length > 6
     );
   };
 
-  const validateEmailHandler = () =>
+  const passwordChangeHandler = (event) => {
+    setEnteredPassword(event.target.value);
+
+    setFormIsValid(
+      enteredEmail.includes('@') && event.target.value.trim().length > 6
+    );
+  };
+
+  const validateEmailHandler = () => {
     setEmailIsValid(enteredEmail.includes('@'));
-  
-  const validatePasswordHandler = () =>
+  };
+
+  const validatePasswordHandler = () => {
     setPasswordIsValid(enteredPassword.trim().length > 6);
+  };
 
   const submitHandler = (event) => {
     event.preventDefault();
